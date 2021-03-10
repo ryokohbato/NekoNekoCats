@@ -2,15 +2,19 @@
     <!-- Base application theme. -->
     <style name="Theme.NekoNekoCats" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/main_dark</item>
+        <item name="colorPrimaryVariant">@color/main_dark__darker</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/main_dark__vivider</item>
+<!--        <item name="colorSecondaryVariant">@color/sub_darker</item>-->
+<!--        <item name="colorOnSecondary">@color/white</item>-->
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/main_dark__vivider__darker</item>
         <!-- Customize your theme here. -->
+
+        <!-- Use Toolbar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>
