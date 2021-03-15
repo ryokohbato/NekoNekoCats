@@ -71,4 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         return tweetDataItem;
     }
+
+    public void NyannNyann(View view) {
+        PostTweetAsync postTweetAsync = new PostTweetAsync();
+        postTweetAsync.execute("にゃーん");
+    }
 }
