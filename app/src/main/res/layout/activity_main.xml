@@ -26,4 +26,13 @@
         app:srcCompat="@drawable/baseline_dark_mode_white_36"
         android:onClick="toggleColorTheme"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/timeline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
