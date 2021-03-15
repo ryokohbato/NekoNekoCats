@@ -4,16 +4,21 @@ import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import twitter4j.Status;
+import twitter4j.Paging;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class GetHomeTimeline extends AsyncTask<Void, Void, List<Status>> {
+public class GetHomeTimeline extends AsyncTask<Void, List<twitter4j.Status>, Void> {
+    private static long latestTweetId = 0;
+    Twitter twitter;
+
     @Override
-    protected List<twitter4j.Status> doInBackground(Void... voids) {
+    protected Void doInBackground(Void... voids) {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey(TwitterKeyManager.getApi_key())
@@ -22,22 +27,73 @@ public class GetHomeTimeline extends AsyncTask<Void, Void, List<Status>> {
                 .setOAuthAccessTokenSecret(TwitterKeyManager.getAccess_token_secret());
 
         TwitterFactory factory = new TwitterFactory(cb.build());
-        Twitter twitter = factory.getInstance();
+        twitter = factory.getInstance();
+
+        TimerTask getTimelineTask = new TimerTask() {
+            public void run() {
+                getCurrentTimeline();
+            }
+        };
+
+        // Get timeline per minute
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(getTimelineTask, 0, 60000);
+
+        return null;
+    }
+
+    protected void getCurrentTimeline() {
         try {
+            int pageCount = 1;
             List<twitter4j.Status> timelineTweets = twitter.getHomeTimeline();
-            return timelineTweets;
+
+            if (latestTweetId == 0) {
+                publishProgress(timelineTweets);
+            }
+            else {
+                List<twitter4j.Status> matchTweets = new ArrayList<>();
+
+                while (timelineTweets.get(timelineTweets.size() - 1).getId() > latestTweetId) {
+                    matchTweets.addAll(timelineTweets);
+                    pageCount += 1;
+                    Paging paging = new Paging(pageCount, 20);
+                    timelineTweets = twitter.getHomeTimeline(paging);
+                }
+
+                // Get new tweets since latestTweetId
+                for(int i = 0; i < timelineTweets.size(); i++) {
+                    if (timelineTweets.get(i).getId() <= latestTweetId) {
+                        break;
+                    }
+
+                    matchTweets.add(timelineTweets.get(i));
+                }
+
+                publishProgress(matchTweets);
+            }
+
+            latestTweetId = timelineTweets.get(0).getId();
         } catch (TwitterException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            publishProgress(new ArrayList<>());
         }
     }
 
     @Override
-    protected void onPostExecute(List<twitter4j.Status> timelineTweets) {
-        super.onPostExecute(timelineTweets);
-
-        for(twitter4j.Status tweet: timelineTweets) {
-            MainActivity.insertItemToEnd(MainActivity.createTweetData(tweet.getUser().getName(), tweet.getText()));
+    protected void onProgressUpdate(List<twitter4j.Status>... timelineTweets) {
+        super.onProgressUpdate(timelineTweets);
+        int nyannNyannCount = 0;
+        for(int i = 0; i < timelineTweets[0].size(); i++) {
+            if (timelineTweets[0].get(i).getText().matches("^.*にゃーん.*$")) {
+                MainActivity.insertItem(
+                    nyannNyannCount,
+                    MainActivity.createTweetData(
+                        timelineTweets[0].get(i).getUser().getName(),
+                        timelineTweets[0].get(i).getText()
+                    )
+                );
+                nyannNyannCount += 1;
+            }
         }
     }
 }

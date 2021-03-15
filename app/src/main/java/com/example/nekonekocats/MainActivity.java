@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Add tweet data in the top
-    public static void insertItemToEnd(TweetData tweetData) {
-        int insertIndex = tweetDataList.size();
+    public static void insertItem(int insertIndex, TweetData tweetData) {
         tweetDataList.add(insertIndex, tweetData);
         adapter.notifyItemInserted(insertIndex);
     }
