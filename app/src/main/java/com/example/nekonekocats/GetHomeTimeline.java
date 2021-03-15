@@ -85,13 +85,14 @@ public class GetHomeTimeline extends AsyncTask<Void, List<twitter4j.Status>, Voi
         int nyannNyannCount = 0;
         for(int i = 0; i < timelineTweets[0].size(); i++) {
             if (timelineTweets[0].get(i).getText().matches("^.*にゃーん.*$")) {
-                MainActivity.insertItem(
-                    nyannNyannCount,
-                    MainActivity.createTweetData(
+                MainActivity.ImageLoaderCallback imageLoaderCallback
+                    = new MainActivity.ImageLoaderCallback(
+                        nyannNyannCount,
                         timelineTweets[0].get(i).getUser().getName(),
                         timelineTweets[0].get(i).getText()
-                    )
-                );
+                    );
+                LoadImageAsync loadImageAsync = new LoadImageAsync(imageLoaderCallback);
+                loadImageAsync.execute(timelineTweets[0].get(i).getUser().get400x400ProfileImageURLHttps());
                 nyannNyannCount += 1;
             }
         }

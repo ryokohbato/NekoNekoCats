@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 
@@ -42,6 +43,29 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyItemInserted(insertIndex);
     }
 
+    public static class ImageLoaderCallback {
+        private int index;
+        private  String profileName;
+        private String tweetText;
+
+        public  ImageLoaderCallback(int index, String profileName, String tweetText) {
+            this.index = index;
+            this.profileName = profileName;
+            this.tweetText = tweetText;
+        }
+
+        public void insertMatchedItem(Drawable profileIcon) {
+            MainActivity.insertItem(
+                index,
+                MainActivity.createTweetData(
+                    profileIcon,
+                    profileName,
+                    tweetText
+                )
+            );
+        }
+    }
+
     protected void setupRecyclerView() {
         recyclerView = findViewById(R.id.timeline);
         layoutManager = new LinearLayoutManager(this);
@@ -63,9 +87,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static TweetData createTweetData(String profileName, String tweetText) {
+    public static TweetData createTweetData(Drawable profileIcon, String profileName, String tweetText) {
         TweetData tweetDataItem = new TweetData();
 
+        tweetDataItem.setProfileIcon(profileIcon);
         tweetDataItem.setProfileName(profileName);
         tweetDataItem.setTweetText(tweetText);
 

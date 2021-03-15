@@ -24,6 +24,7 @@ public class TweetDataAdapter extends RecyclerView.Adapter<TweetDataViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull TweetDataViewHolder holder, int position) {
+        holder.profileIconView.setImageDrawable(tweetDataList.get(position).getProfileIcon());
         holder.profileNameView.setText(tweetDataList.get(position).getProfileName());
         holder.tweetTextView.setText(tweetDataList.get(position).getTweetText());
     }

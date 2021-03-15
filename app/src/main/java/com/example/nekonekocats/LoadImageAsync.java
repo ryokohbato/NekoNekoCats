@@ -11,10 +11,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class LoadImageAsync extends AsyncTask<String, Void, Drawable> {
-    private Activity _activity;
+    private MainActivity.ImageLoaderCallback imageLoaderCallback = null;
 
-    public LoadImageAsync(Activity activity) {
-        _activity = activity;
+    public LoadImageAsync(MainActivity.ImageLoaderCallback imageLoaderCallback) {
+        this.imageLoaderCallback = imageLoaderCallback;
     }
 
     @Override
@@ -35,6 +35,6 @@ public class LoadImageAsync extends AsyncTask<String, Void, Drawable> {
 
     protected void onPostExecute(Drawable image) {
         if (image == null) return;
-        ((ImageView)_activity.findViewById(R.id.profile_icon)).setImageDrawable(image);
+        imageLoaderCallback.insertMatchedItem(image);
     }
 }
